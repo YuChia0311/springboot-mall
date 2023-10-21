@@ -4,7 +4,11 @@ import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
 
+import java.util.List;
+
 public interface ProductService {
+
+    List<Product> getProducts();
 
     Product getProductById(Integer productId);
 
