@@ -32,7 +32,7 @@ public class ProductController {
        return  ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
-    @PutMapping("/products/{productId}")
+    @PutMapping("/products/{productId}")//修改商品
     public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
                                                  @RequestBody @Valid ProductRequest productRequest){
         //檢查product是否存在
@@ -48,5 +48,13 @@ public class ProductController {
         Product updateProduct = productService.getProductById(productId);
 
         return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
+    }
+
+    //刪除商品
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer productId){
+        productService.deleteProductById(productId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
