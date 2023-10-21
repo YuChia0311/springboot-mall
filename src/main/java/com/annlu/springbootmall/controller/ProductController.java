@@ -1,5 +1,6 @@
 package com.annlu.springbootmall.controller;
 
+import com.annlu.springbootmall.constant.ProductCategory;
 import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import com.annlu.springbootmall.service.ProductService;
@@ -16,8 +17,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
     @GetMapping("/products")//查詢商品列表
-    public ResponseEntity<List<Product>> getProducts(){
-        List<Product> productList = productService.getProducts();
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category ,//category是可選的參數 用商品類別查詢
+            @RequestParam(required = false) String search
+            ){
+        List<Product> productList = productService.getProducts(category, search);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
