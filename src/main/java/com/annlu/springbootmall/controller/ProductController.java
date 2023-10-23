@@ -5,6 +5,7 @@ import com.annlu.springbootmall.dto.ProductQueryParams;
 import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import com.annlu.springbootmall.service.ProductService;
+import com.annlu.springbootmall.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -21,7 +22,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
     @GetMapping("/products")//查詢商品列表
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             //商品查詢條件
             @RequestParam(required = false) ProductCategory category ,//category是可選的參數 用商品類別查詢
             @RequestParam(required = false) String search,
@@ -39,10 +40,18 @@ public class ProductController {
         productQueryParams.setSort(sort);
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
-
+        //取得 product list
         List<Product> productList = productService.getProducts(productQueryParams);
+        //取得 product 總數
+        Integer total = productService.countProduct(productQueryParams);
+        //分頁
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
     @GetMapping("/products/{productId}")
