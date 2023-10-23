@@ -30,7 +30,7 @@ public class ProductDaoImpl implements ProductDao{
                             //WHERE 1=1 用途:直接拼接and sql語句
 
         Map<String, Object> map = new HashMap<>();
-
+        //查詢條件
         if (productQueryParams.getCategory() != null){
             sql = sql + " AND category = :category";//AND前面要預留空白鍵 拼接SQL才不會出現問題
             map.put("category", productQueryParams.getCategory().name());//Enum類型 用name()轉換成字串
@@ -39,8 +39,12 @@ public class ProductDaoImpl implements ProductDao{
             sql = sql + " AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%"); //模糊查詢
         }
-
+        //排序
         sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+        //分頁
+        sql = sql + " LIMIT :limit OFFSET :offset";
+        map.put("limit" , productQueryParams.getLimit());
+        map.put("offset", productQueryParams.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql,map,new ProductRowMapper());
 
