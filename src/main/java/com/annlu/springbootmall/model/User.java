@@ -1,11 +1,14 @@
 package com.annlu.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
     private Integer userId;
     private String email;
-    private String password;
+    @JsonIgnore
+    private String password;//不會將password的值回傳給前端
     private Date createdDate;
     private Date lastModifiedDate;
 
