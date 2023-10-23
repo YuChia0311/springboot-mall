@@ -1,6 +1,6 @@
 package com.annlu.springbootmall.service;
 
-import com.annlu.springbootmall.constant.ProductCategory;
+import com.annlu.springbootmall.dto.ProductQueryParams;
 import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    List<Product> getProducts(ProductCategory category, String search);
+    List<Product> getProducts(ProductQueryParams productQueryParams);
 
     Product getProductById(Integer productId);
 

@@ -1,6 +1,7 @@
 package com.annlu.springbootmall.controller;
 
 import com.annlu.springbootmall.constant.ProductCategory;
+import com.annlu.springbootmall.dto.ProductQueryParams;
 import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import com.annlu.springbootmall.service.ProductService;
@@ -21,7 +22,11 @@ public class ProductController {
             @RequestParam(required = false) ProductCategory category ,//category是可選的參數 用商品類別查詢
             @RequestParam(required = false) String search
             ){
-        List<Product> productList = productService.getProducts(category, search);
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setCategory(category);
+        productQueryParams.setSearch(search);
+
+        List<Product> productList = productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
