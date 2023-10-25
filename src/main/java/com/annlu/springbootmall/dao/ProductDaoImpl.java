@@ -1,11 +1,9 @@
 package com.annlu.springbootmall.dao;
 
-import com.annlu.springbootmall.constant.ProductCategory;
 import com.annlu.springbootmall.dto.ProductQueryParams;
 import com.annlu.springbootmall.dto.ProductRequest;
 import com.annlu.springbootmall.model.Product;
 import com.annlu.springbootmall.rowmapper.ProductRowMapper;
-import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -120,6 +118,19 @@ public class ProductDaoImpl implements ProductDao{
         map.put("lastModifiedDate",new Date());//紀錄最後修改時間
 
         namedParameterJdbcTemplate.update(sql,map);
+    }
+
+    @Override
+    public void updateStock(Integer productId, Integer stock) {
+        String sql = "UPDATE product SET stock = :stock, last_modified_date = :lastModifiedDate" +
+                " WHERE product_id = :productId ";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("productId", productId);
+        map.put("stock", stock);
+        map.put("lastModifiedDate", new Date());
+
+        namedParameterJdbcTemplate.update(sql, map);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.annlu.springbootmall.dao;
 
 import com.annlu.springbootmall.dto.ProductQueryParams;
 import com.annlu.springbootmall.dto.ProductRequest;
+import com.annlu.springbootmall.dto.UserLoginRequest;
 import com.annlu.springbootmall.model.Product;
 
 import java.util.List;
@@ -16,6 +17,9 @@ public interface ProductDao {
     Integer createProduct(ProductRequest productRequest);
 
     void updateProduct(Integer productId,ProductRequest productRequest);
+    void updateStock(Integer productId, Integer stock);
 
     void deleteProductById(Integer productId);
+
+
 }
