@@ -3,7 +3,7 @@ package com.annlu.springbootmall.dto;
 import com.annlu.springbootmall.constant.ProductCategory;
 
 public class ProductQueryParams {
-
+    //封裝商品查詢的參數
     //將前端傳過來的參數 整理在ProductQueryParams中 方便做管理 程式較好維護
 
     private ProductCategory category;

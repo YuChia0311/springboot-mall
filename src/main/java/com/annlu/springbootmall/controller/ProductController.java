@@ -29,10 +29,11 @@ public class ProductController {
             //商品排序
             @RequestParam(defaultValue = "created_date") String orderBy,//預設創建時間新到舊排序
             @RequestParam(defaultValue = "desc") String sort,//預設降序排序
-            //分頁
-            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,
-            @RequestParam(defaultValue = "0") @Min(0) Integer offset
+            //分頁 參數給預設值 是因為要保護資料庫的效能，不會一次取全部的數據出來
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) Integer limit,//要取得幾筆數據
+            @RequestParam(defaultValue = "0") @Min(0) Integer offset //要跳過幾筆數據
             ){
+        //將前端傳過來的參數設定到productQueryParams當中
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
@@ -46,7 +47,7 @@ public class ProductController {
         Integer total = productService.countProduct(productQueryParams);
         //分頁
         Page<Product> page = new Page<>();
-        page.setLimit(limit);
+        page.setLimit(limit);//將前端傳過來的limit值 返回給前端
         page.setOffset(offset);
         page.setTotal(total);
         page.setResults(productList);
@@ -54,7 +55,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/products/{productId}")//根據productId查詢單一商品數據
     public ResponseEntity<Product> getProduct(@PathVariable Integer productId){
         Product product = productService.getProductById(productId);
 
@@ -66,16 +67,17 @@ public class ProductController {
     }
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody @Valid ProductRequest productRequest){
-       Integer productId =  productService.createProduct(productRequest);
+                                                  //取得前端傳過來的請求參數   //參數不用Product product的原因是 想要直接驗證前端傳過來的請求參數
+       Integer productId =  productService.createProduct(productRequest);//返回productId
 
-       Product product = productService.getProductById((productId));
+       Product product = productService.getProductById((productId));//根據productId 從資料庫取得商品數據
 
        return  ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
     @PutMapping("/products/{productId}")//修改商品
-    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,
-                                                 @RequestBody @Valid ProductRequest productRequest){
+    public ResponseEntity<Product> updateProduct(@PathVariable Integer productId,//接住url參數
+                                                 @RequestBody @Valid ProductRequest productRequest){//接住前端傳過來的參數
         //檢查product是否存在
         Product product = productService.getProductById(productId);
 
@@ -85,8 +87,8 @@ public class ProductController {
 
         //修改商品的數據
         productService.updateProduct(productId,productRequest);
-
-        Product updateProduct = productService.getProductById(productId);
+                                    //要修改的商品   修改後的值
+        Product updateProduct = productService.getProductById(productId);//查詢更新後的商品數據
 
         return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
     }

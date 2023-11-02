@@ -40,12 +40,13 @@ public class ProductDaoImpl implements ProductDao{
                 "created_date, last_modified_date " +
                 "FROM product WHERE 1=1";
                             //WHERE 1=1 用途:直接拼接and sql語句
+                            //動態新增其他查詢條件，這樣可以避免需要檢查是否要新增"AND"關鍵字。
 
         Map<String, Object> map = new HashMap<>();
         //查詢條件
         sql = addFilteringSql(sql,map,productQueryParams);
         //排序
-        sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
+        sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();//根據order by 的欄位來決定是升序還是降序
         //分頁
         sql = sql + " LIMIT :limit OFFSET :offset";
         map.put("limit" , productQueryParams.getLimit());
@@ -61,7 +62,7 @@ public class ProductDaoImpl implements ProductDao{
         String sql = "select product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date from product where product_id = :productId";
         Map<String, Object> map = new HashMap<>();
         map.put("productId",productId);
-
+        //productList 用來接住query方法的返回值
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
         if(productList.size() > 0 ){
@@ -146,12 +147,12 @@ public class ProductDaoImpl implements ProductDao{
     private String addFilteringSql(String sql, Map<String,Object> map, ProductQueryParams productQueryParams){
         if (productQueryParams.getCategory() != null){
             sql =sql + " AND category = :category";
-            map.put("category", productQueryParams.getCategory().name());
+            map.put("category", productQueryParams.getCategory().name());//ProductCategory是Enum類型 所以要用name()轉換成字串
         }
         if (productQueryParams.getSearch() != null){
             sql = sql + "AND product_name LIKE :search";
             map.put("search", "%" + productQueryParams.getSearch() + "%");
-        }
+        }   //模糊查詢的%要寫在map當中 不可以寫在sql裡面  spring JDBC限制
 
         return sql;
     }

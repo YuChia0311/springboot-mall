@@ -1,5 +1,5 @@
 package com.annlu.springbootmall.util;
-
+//處理分頁相關的response
 import java.util.List;
 
 public class Page<T> {

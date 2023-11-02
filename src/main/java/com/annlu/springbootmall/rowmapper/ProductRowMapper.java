@@ -11,12 +11,12 @@ public class ProductRowMapper implements RowMapper<Product> {
     @Override
     public Product mapRow(ResultSet resultSet, int i) throws SQLException {
         Product product = new Product();
-
+        //取得資料庫數據並轉換成java object
         product.setProductId(resultSet.getInt("product_id"));
         product.setProductName(resultSet.getString("product_name"));
 
         String categoryStr = resultSet.getString("category");
-        ProductCategory category = ProductCategory.valueOf(categoryStr);
+        ProductCategory category = ProductCategory.valueOf(categoryStr);//將字串轉換成Enum類型
         product.setCategory(category);
         //下面寫法 同 上面三行
         //product.setCategory(ProductCategory.valueOf(resultSet.getString("category")));
